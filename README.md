@@ -70,13 +70,20 @@ module.exports = function (api) {
     presets: ['babel-preset-expo'],
     plugins: [
       [
-        "module:react-native-dotenv",
+        'module:react-native-dotenv',
         {
           moduleName: '@env',
-          path: './env'
+          path: '.env'
         }
       ]
     ]
   }
 }
+
+```
+
+```js
+// HomeScreen.js
+// this is how we will be importing environment variable from the env
+import {GOOGLE_MAPS_KEY} from '@env'
 ```
