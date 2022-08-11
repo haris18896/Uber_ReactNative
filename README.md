@@ -1,31 +1,40 @@
-# UBER-CLONE : Home Screen
+# UBER-CLONE : Google AutoComplete Input
 
-clean the `yarn` cache so that the fast refresh can work
+So in this app we are going to use 3 API's `Google Places API` for auto complete places, `Google distance API` for measuring distance between point A and point B, and the last one is `Distance matrix API` for measuring the time of travel.
 
-```
-sudo yarn start --reset-cache
-```
-
-[React Native Elements](https://reactnativeelements.com/) is a Cross Platform React Native UI toolkit with a Material design library.
+to autocomplete input field we are going to use [Google Places autocomplete package](https://github.com/FaridSafi/react-native-google-places-autocomplete),
 
 ```
-npm install @rneui/themed @rneui/base
-npm install react-native-vector-icons
-
-npm install --save react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-screens @react-native-community/masked-view
-
-npx react-native link react-native-vector-icons
-npx react-native link react-native-safe-area-context
-
-
+npm install react-native-google-places-autocomplete --save
 ```
 
-## Wrap your app with SafeAreaProvider from react-native-elements
+* Get your [Google Places API](https://developers.google.com/maps/documentation/places/web-service/get-api-key/) keys and enable "Google Places API Web Service" (NOT Android or iOS) in the console. Billing must be enabled on the account.
 
 ```js
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import React from 'react';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-function App() {
-  return <SafeAreaProvider>...</SafeAreaProvider>;
-}
+const GooglePlacesInput = () => {
+  return (
+    <GooglePlacesAutocomplete
+      placeholder='Search'
+      onPress={(data, details = null) => {
+        // 'details' is provided when fetchDetails = true
+        console.log(data, details);
+      }}
+      query={{
+        key: 'YOUR API KEY',
+        language: 'en',
+      }}
+    />
+  );
+};
+
+export default GooglePlacesInput;
 ```
+
+---
+# Google Places API KEY
+Go to the [Google Cloud Platform](https://cloud.google.com/) ===> click on `console` ===> Create a new project..
+
+After successfully Creating a project
