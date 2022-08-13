@@ -3,8 +3,8 @@ import React from 'react'
 import tw from 'twrnc'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import { GOOGLE_MAPS_KEY } from '@env'
-import { useDispatch } from 'react-redux'
-import { setDestination } from '../../redux/slices/navSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectDestination, selectOrigin, setDestination } from '../../redux/slices/navSlice'
 import { useNavigation } from '@react-navigation/native'
 import NavFavorites from '../navFavorites/NavFavorites'
 import { Icon } from '@rneui/themed'
@@ -12,10 +12,17 @@ import { Icon } from '@rneui/themed'
 const NavigateCard = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
+  const origin = useSelector(selectOrigin)
+  const destination = useSelector(selectDestination)
 
   return (
     <SafeAreaView style={tw`bg-white flex-1`}>
-      <Text style={tw`text-center py-5 text-xl`}>Good Morning, Haris</Text>
+      <View>
+        <TouchableOpacity style={tw`absolute top-3 left-5 p-3 z-50 rounded-full `} onPress={() => navigation.navigate('Home')}>
+          <Icon name='chevron-left' type='fontawesome' />
+        </TouchableOpacity>
+        <Text style={tw`text-center py-5 text-xl`}>Good Morning, Haris</Text>
+      </View>
       <View style={tw`border-t border-gray-200 flex-shrink`}>
         <View>
           <GooglePlacesAutocomplete
@@ -47,13 +54,19 @@ const NavigateCard = () => {
 
       <View style={tw`flex-row bg-white justify-evenly py-2 mt-auto border-t border-gray-100`}>
         <TouchableOpacity
+          disabled={!origin && !destination}
           onPress={() => navigation.navigate('RideOptionsCard')}
-          style={tw`flex justify-between flex-row bg-black w-24 px-4 py-3 rounded-full`}
+          style={tw`flex justify-between flex-row bg-black w-24 px-4 py-3 rounded-full ${
+            !origin && !destination && 'opacity-30'
+          }`}
         >
           <Icon type='font-awesome' color='white' size={16} name='car' />
           <Text style={tw`text-white text-center`}>Rides</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={tw`flex justify-between flex-row w-24 px-4 py-3 rounded-full`}>
+        <TouchableOpacity
+          disabled={!origin && !destination}
+          style={tw`flex justify-between flex-row w-24 px-4 py-3 rounded-full ${!origin && !destination && 'opacity-30'}`}
+        >
           <Icon type='ionicon' color='black' size={16} name='fast-food-outline' />
           <Text style={tw`text-center `}>Eats</Text>
         </TouchableOpacity>

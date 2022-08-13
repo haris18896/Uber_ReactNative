@@ -3,10 +3,15 @@ import React, { useState } from 'react'
 import tw from 'twrnc'
 import { Icon } from '@rneui/themed'
 import { useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
+import { selectTravelTimeInformation } from '../../redux/slices/navSlice'
+import Intl from 'intl'
+import 'intl/locale-data/jsonp/en-US'
 
 const RideOptionsCard = () => {
   const navigation = useNavigation()
   const [selected, setSelected] = useState(null)
+  const travelInformation = useSelector(selectTravelTimeInformation)
 
   const data = [
     {
@@ -29,6 +34,9 @@ const RideOptionsCard = () => {
     }
   ]
 
+  // If we have SURGE pricing, this goes up
+  const SURGE_CHARGE_RATE = 1.5
+
   return (
     <SafeAreaView vertical style={tw`bg-white flex-grow`}>
       <View>
@@ -38,7 +46,7 @@ const RideOptionsCard = () => {
         >
           <Icon name='chevron-left' type='fontawesome' />
         </TouchableOpacity>
-        <Text style={tw`text-center py-5  text-xl`}>Select A Ride</Text>
+        <Text style={tw`text-center py-5  text-xl`}>Select A Ride - {travelInformation?.distance.text || '(NO API)'}</Text>
       </View>
       <FlatList
         data={data}
@@ -60,9 +68,14 @@ const RideOptionsCard = () => {
             />
             <View style={tw`-ml-6`}>
               <Text style={tw`text-xl font-semibold `}>{title}</Text>
-              <Text>Travel time...</Text>
+              <Text>{travelInformation?.duration?.text || '(NO API)'} Travel time</Text>
             </View>
-            <Text style={tw`text-xl`}>£ 9.99</Text>
+            <Text style={tw`text-xl`}>
+              {new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PKR'
+              }).format((travelInformation?.duration?.value * SURGE_CHARGE_RATE * multiplier) / 100)}
+            </Text>
           </TouchableOpacity>
         )}
       />

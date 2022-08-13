@@ -127,3 +127,61 @@ export default RideOptionsCard
 
 ## Adding The Travel Time Calculation using Distance Matrix API
 
+```js
+// MapComponents.js
+
+//...............
+  useEffect(() => {
+    if (!origin || !destination) return
+    // Responsible for Calculating the Travel time
+    const getTravelTime = async () => {
+      const URL = `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origin=${origin.description}&description=${destination.description}&key=${GOOGLE_MAPS_KEY}`
+
+      fetch(URL)
+        .then(res => res.json())
+        .then(data => {
+          console.log('data : ', data)
+          dispatch(setTravelTimeInformation(data.rows[0].elements[0]))
+        })
+    }
+  }, [origin, destination, GOOGLE_MAPS_KEY])
+
+  //............
+```
+ distance and time calculated using distance matrix api
+```js
+// RideOptionsCard.js
+
+//...........
+
+const travelInformation = useSelector(selectTravelTimeInformation)
+
+  // If we have SURGE pricing, this goes up
+  const SURGE_CHARGE_RATE = 1.5
+//..............
+        <Text style={tw`text-center py-5  text-xl`}>Select A Ride - {travelInformation?.distance.text || '(NO API)'}</Text>
+//.............
+            <View style={tw`-ml-6`}>
+              <Text style={tw`text-xl font-semibold `}>{title}</Text>
+              <Text>{travelInformation?.duration?.text || '(NO API)'} Travel time</Text>
+            </View>
+```
+
+for the `Price` we are going to to use the `Internationalization JavaScript API` to get the currency symbol and the price.
+
+```js
+// RideOptionsCard.js
+import Intl from 'intl'
+import 'intl/locale-data/jsonp/en-US'
+ 
+ //......
+ //......
+
+          <Text style={tw`text-xl`}>
+              {new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PKR'
+              }).format((travelInformation?.duration?.value * SURGE_CHARGE_RATE * multiplier) / 100)}
+            </Text>
+
+```
