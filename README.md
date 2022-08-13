@@ -104,3 +104,4 @@ export default HomeScreen
 
 ---
 # Above settings are for Redux, React-Native-Navigation and Tailwind CSS.
+
