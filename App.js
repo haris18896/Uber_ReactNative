@@ -17,7 +17,11 @@ export default function App() {
     <NavigationContainer>
       <Provider store={store}>
         <SafeAreaProvider>
-          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1 }}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? -64 : 0}
+          >
             <Stack.Navigator>
               <Stack.Screen
                 name='Home'
